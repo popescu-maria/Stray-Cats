@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Cat Location</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <div id="catFormModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Add Cat Details</h2>
+            <form id="addCatForm" action="{{ url_for('main.handle_add_cat_form') }}" method="post">
+                <label for="nume">Cat Name:</label>
+                <input type="text" id="nume" name="nume" required><br>
+
+                <input type="hidden" id="modalLatitude" name="latitude">
+                <input type="hidden" id="modalLongitude" name="longitude">
+
+                <label>Needs:</label>
+                <div class="checkbox-group">
+                    {% for nevoie in nevoi_list %}
+                        <input type="checkbox" id="nevoi_{{ loop.index }}" name="nevoi" value="{{ nevoie }}">
+                        <label for="nevoi_{{ loop.index }}">{{ nevoie.replace('_', ' ') }}</label>
+                    {% endfor %}
+                </div>
+                <input type="submit" value="Add Cat">
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/map.js') }}" async defer></script>
+    <script>
+        function initMap() {
+            const defaultLocation = { lat: 44.4268, lng: 26.1025 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: defaultLocation,
+                mapTypeId: 'roadmap'
+            });
+
+            map.addListener('click', (e) => {
+                placeMarkerAndSetValue(e.latLng);
+                openModal(e.latLng.lat(), e.latLng.lng());
+            });
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_api_key }}&callback=initMap">
+    </script>
+</body>
+</html>

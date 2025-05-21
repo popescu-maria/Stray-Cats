@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adopt a Stray</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <h1>Adopt a Stray</h1>
+
+    <div class="centered-content">
+        <button onclick="window.location.href='/adopt-care'" class="adopt-care-button">Adopt & Care</button>
+        <div class="register-cat-group">
+            <h3>(or register one!)</h3>
+            <button onclick="window.location.href='/add-cat'">Add New Cat!</button>
+        </div>
+    </div>
+
+    <script>
+        window.flashedMessages = [
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    { category: "{{ category }}", text: "{{ message | safe }}" },
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        ];
+    </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

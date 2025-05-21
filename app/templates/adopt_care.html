@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adopt & Care Map</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/adopt_care.css') }}">
+</head>
+<body>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <script>
+        window.catLocations = {{ cat_locations | tojson | safe }};
+    </script>
+
+    <script>
+        let map;
+        let heatmap;
+
+        function initMap() {
+            const defaultLocation = { lat: 44.4268, lng: 26.1025 };
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: defaultLocation,
+                mapTypeId: 'roadmap'
+            });
+
+            const heatmapData = window.catLocations.map(location => new google.maps.LatLng(location.lat, location.lng));
+
+            heatmap = new google.maps.visualization.HeatmapLayer({
+                data: heatmapData,
+                map: map,
+                radius: 30,
+                gradient: [
+        'rgba(255, 240, 245, 0)',
+        'rgba(255, 230, 235, 0.4)',
+        'rgba(255, 220, 225, 0.6)',
+        'rgba(255, 200, 210, 0.7)',
+        'rgba(255, 170, 180, 0.8)',
+        'rgba(255, 140, 150, 0.9)',
+        'rgba(255, 110, 120, 0.95)',
+        'rgba(255, 80, 90, 1)',
+        'rgba(255, 0, 80, 1)'
+    ],
+                opacity: 0.8
+            });
+        }
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_api_key }}&libraries=visualization&callback=initMap"></script>
+</body>
+</html>

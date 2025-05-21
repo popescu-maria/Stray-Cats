@@ -1,0 +1,148 @@
+
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #ffc8dd;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+#map-container {
+    width: 98%;
+    max-width: 1200px;
+    aspect-ratio: 16 / 9;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5),
+                0 6px 6px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    /*z-index: 1000;*/
+}
+
+.modal-content {
+    background-color: #ffc8dd;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: #f00;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.modal-content label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+.modal-content input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+.modal-content .checkbox-group {
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+.modal-content .checkbox-group {
+    margin-bottom: 20px;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-radius: 10px;
+    justify-content: center;
+}
+.modal-content input[type="checkbox"] {
+    display: none;
+}
+.modal-content .checkbox-group label {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #bde0fe;
+    color: #555;
+    font-weight: normal;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+.modal-content .checkbox-group label:hover {
+    background-color: white;
+}
+.modal-content .checkbox-group label.checked {
+    background-color: #093F5A;
+    color: white;
+    border-color: #093F5A;
+}
+.modal-content input[type="submit"] {
+    background-color: #a2d2ff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 100%;
+}
+.modal-content input[type="submit"]:hover {
+    background-color: #023047;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

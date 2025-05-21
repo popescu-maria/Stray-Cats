@@ -1,0 +1,81 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #cdb4db;
+    color: white;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+h1 {
+    color: black;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    margin: 0;
+}
+
+.centered-content {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: 40px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.centered-content > * {
+    position: relative;
+    bottom: 5px;
+}
+
+.register-cat-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+h3 {
+    color: #343a40;
+    margin: 0;
+    font-size: 1.5em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+button {
+    padding: 20px;
+    font-size: 20px;
+    background-color: #ffafcc;
+    color: black;
+    border: 2px solid #cc5385;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    min-width: 200px;
+    text-align: center;
+}
+
+button:hover {
+    background-color: #ffc8dd;
+    border-color: #ffafcc;
+}
+
+.adopt-care-button {
+    background-color: #a2d2ff;
+    border-color: #023047;
+    color: #333;
+}
+
+.adopt-care-button:hover {
+    background-color: #bde0fe;
+    border-color: #a2d2ff;
+}

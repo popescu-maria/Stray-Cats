@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Cat Location on Map</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #map {
+            height: 80%;
+            width: 80%;
+            border: 2px solid white;
+            border-radius: 8px;
+        }
+        #form-popup {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: black;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}"></script>
+    <script>
+        let map, marker, selectedLat, selectedLng;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 8,
+                center: { lat: -34.397, lng: 150.644 },
+            });
+
+            marker = new google.maps.Marker({
+                position: { lat: -34.397, lng: 150.644 },
+                map: map,
+                draggable: true,
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        map.setCenter(pos);
+                        marker.setPosition(pos);
+                    },
+                    () => {
+                        handleLocationError(true, map.getCenter());
+                    }
+                );
+            } else {
+                handleLocationError(false, map.getCenter());
+            }
+
+            marker.addListener("dragend", () => {
+                selectedLat = marker.getPosition().lat();
+                selectedLng = marker.getPosition().lng();
+                openForm();
+            });
+
+            // Fetch the list of "nevoi" from the back-end and populate the dropdown
+            fetch("/get-nevoi")
+                .then((response) => response.json())
+                .then((data) => {
+                    const nevoiSelect = document.getElementById("nevoi");
+                    nevoiSelect.innerHTML = ""; // Clear existing options
+                    data.nevoi.forEach((nevoie) => {
+                        const option = document.createElement("option");
+                        option.value = nevoie;
+                        option.textContent = nevoie;
+                        nevoiSelect.appendChild(option);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching nevoi:", error);
+                });
+        }
+
+        function openForm() {
+            document.getElementById("form-popup").style.display = "block";
+            document.getElementById("latitude").value = selectedLat;
+            document.getElementById("longitude").value = selectedLng;
+        }
+
+        function closeForm() {
+            document.getElementById("form-popup").style.display = "none";
+        }
+
+        function handleLocationError(browserHasGeolocation, pos) {
+            alert(
+                browserHasGeolocation
+                    ? "Error: The Geolocation service failed."
+                    : "Error: Your browser doesn't support geolocation."
+            );
+        }
+
+        document.getElementById("save-cat-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            fetch("http://127.0.0.1:5000/add-cat/", {
+                method: "POST",
+                body: JSON.stringify({
+                    nume: formData.get("nume"),
+                    latitude: formData.get("latitude"),
+                    longitude: formData.get("longitude"),
+                    nevoi: formData.getAll("nevoi"),
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.message) {
+                        alert(data.message);
+                        closeForm();
+                    } else {
+                        alert("Error: " + (data.error || "Unknown error occurred"));
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error adding cat:", error);
+                    alert("Failed to save cat location.");
+                });
+        });
+    </script>
+</head>
+<body>
+    <h1>Add Cat Location on Map</h1>
+    <div id="map"></div>
+
+    <div id="form-popup">
+        <form id="save-cat-form">
+            <label for="nume">Cat Name (Optional):</label>
+            <input type="text" id="nume" name="nume" placeholder="Enter cat name">
+
+            <label for="nevoi">Choose Needs:</label>
+            <select id="nevoi" name="nevoi" multiple>
+                <!-- Options will be dynamically populated -->
+            </select>
+
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+
+            <button type="submit">Save Location</button>
+            <button type="button" onclick="closeForm()">Cancel</button>
+        </form>
+    </div>
+</body>
+</html>
