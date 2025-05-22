@@ -8,5 +8,4 @@ def init_extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
-    # You might also want to set a message for unauthorized access
     login_manager.login_message = "Please log in to access this page."

@@ -2,7 +2,6 @@
 
 import os
 from flask import Flask
-# from app.config import Config
 from app.extensions import db, login_manager, init_extensions
 from dotenv import load_dotenv
 
@@ -21,6 +20,6 @@ def create_app():
     app.register_blueprint(main_blueprint)
 
     with app.app_context():
-        db.create_all() # Create database tables based on models
+        db.create_all()
 
     return app

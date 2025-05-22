@@ -98,7 +98,6 @@
                 openForm();
             });
 
-            // Fetch the list of "nevoi" from the back-end and populate the dropdown
             fetch("/get-nevoi")
                 .then((response) => response.json())
                 .then((data) => {
@@ -177,7 +176,6 @@
 
             <label for="nevoi">Choose Needs:</label>
             <select id="nevoi" name="nevoi" multiple>
-                <!-- Options will be dynamically populated -->
             </select>
 
             <input type="hidden" id="latitude" name="latitude">
