@@ -18,6 +18,7 @@
     <script>
         let map;
         let heatmap;
+        let infoWindow;
 
         function initMap() {
             const defaultLocation = { lat: 44.4268, lng: 26.1025 };
@@ -27,6 +28,40 @@
                 center: defaultLocation,
                 mapTypeId: 'roadmap'
             });
+
+            infoWindow = new google.maps.InfoWindow();
+
+            window.catLocations.forEach(cat => {
+                const catLatLng = new google.maps.LatLng(cat.lat, cat.lng);
+
+                const marker = new google.maps.Marker({
+                    position: catLatLng,
+                    map: map,
+                    title: cat.nume || 'Unknown Cat'
+                });
+
+                let contentString = `
+                    <div class="info-window-content">
+                        <h4>${cat.nume || 'Pisică necunoscută'}</h4>
+                        ${cat.adresa ? `<p><strong>Adresă:</strong> ${cat.adresa}</p>` : ''}
+                        <p>Nevoi:</p>
+                        <ul>
+                `;
+                if (cat.nevoi && cat.nevoi.length > 0) {
+                    cat.nevoi.forEach(nevoie => {
+                        contentString += `<li>${nevoie.replace('_', ' ')}</li>`;
+                    });
+                } else {
+                    contentString += `<li>Nicio nevoie specificată.</li>`;
+                }
+                contentString += `</ul></div>`;
+
+                marker.addListener('click', () => {
+                    infoWindow.setContent(contentString);
+                    infoWindow.open(map, marker);
+                });
+            });
+
 
             const heatmapData = window.catLocations.map(location => new google.maps.LatLng(location.lat, location.lng));
 
@@ -53,3 +88,26 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_api_key }}&libraries=visualization&callback=initMap"></script>
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Adopt & Care Map</title>-->
+<!--    <link rel="stylesheet" href="{{ url_for('static', filename='css/adopt_care.css') }}">-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div id="map-container">-->
+<!--        <div id="map"></div>-->
+<!--    </div>-->
+
+<!--    <script>-->
+<!--        window.catLocations = {{ cat_locations | tojson | safe }};-->
+<!--    </script>-->
+
+<!--    <script src="{{ url_for('static', filename='js/adopt_care_map.js') }}"></script>-->
+<!--    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_api_key }}&libraries=visualization&callback=initMap"></script>-->
+<!--</body>-->
+<!--</html>-->
