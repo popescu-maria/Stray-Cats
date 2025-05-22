@@ -2,6 +2,7 @@ from ..extensions import db
 from sqlalchemy import Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from datetime import datetime, timedelta
+from .users import User
 
 cat_nevoi_association = db.Table('cat_nevoi', db.Model.metadata,
     db.Column('cat_id', db.Integer, db.ForeignKey('cats.id'), primary_key=True),
@@ -28,6 +29,9 @@ class Cat(db.Model):
     nume = db.Column(db.String(50))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    owner = relationship("User", backref="cats_added")
 
     nevoi_list = relationship("Nevoi",
                               secondary=cat_nevoi_association,
@@ -43,7 +47,7 @@ class MetNeed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cat_id = db.Column(db.Integer, db.ForeignKey('cats.id'), nullable=False)
     nevoi_id = db.Column(db.Integer, db.ForeignKey('nevoi.id'), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     cat = relationship("Cat", backref="met_needs")
     nevoi = relationship("Nevoi", backref="met_needs")
@@ -52,7 +56,7 @@ class MetNeed(db.Model):
         return f"<MetNeed(id={self.id}, cat_id={self.cat_id}, nevoi_id={self.nevoi_id}, timestamp={self.timestamp})>"
 
     @classmethod
-    def was_met_recently(cls, cat_id, nevoi_id, hours=24):
+    def was_met_recently(cls, cat_id, nevoi_id, hours=5):
         cutoff_time = datetime.utcnow() - timedelta(hours=hours)
         return cls.query.filter(
             cls.cat_id == cat_id,

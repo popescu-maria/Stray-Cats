@@ -5,15 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adopt a Stray</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 </head>
 <body>
     <h1>Adopt a Stray</h1>
+
+    <div class="top-right-auth-buttons">
+        {% if current_user.is_authenticated %}
+            {# Display Logout button if user is logged in #}
+            <button onclick="window.location.href='{{ url_for('main.logout') }}'" class="auth-button">Logout ({{ current_user.username }})</button>
+        {% else %}
+            {# Display Login and Create Account buttons if user is NOT logged in #}
+            <button id="loginButton" class="auth-button">Login</button>
+            <button id="registerButton" class="auth-button">Create Account</button>
+        {% endif %}
+    </div>
 
     <div class="centered-content">
         <button onclick="window.location.href='/adopt-care'" class="adopt-care-button">Adopt & Care</button>
         <div class="register-cat-group">
             <h3>(or register one!)</h3>
             <button onclick="window.location.href='/add-cat'">Add New Cat!</button>
+        </div>
+    </div>
+
+    {# Login Modal #}
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm" action="{{ url_for('main.login') }}" method="POST">
+                <label for="login_username_email">Username/Email:</label>
+                <input type="text" id="login_username_email" name="username_email" required>
+
+                <label for="login_password">Password:</label>
+                <input type="password" id="login_password" name="password" required>
+
+                <button type="submit">Login</button>
+            </form>
+            <p id="loginMessage" class="error-message"></p>
+        </div>
+    </div>
+
+    {# Register Modal #}
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Create Account</h2>
+            <form id="registerForm" action="{{ url_for('main.register') }}" method="POST">
+                <label for="reg_username">Username:</label>
+                <input type="text" id="reg_username" name="username" required>
+
+                <label for="reg_email">Email:</label>
+                <input type="email" id="reg_email" name="email" required>
+
+                <label for="reg_password">Password:</label>
+                <input type="password" id="reg_password" name="password" required>
+
+                <label for="reg_confirm_password">Confirm Password:</label>
+                <input type="password" id="reg_confirm_password" name="confirm_password" required>
+
+                <button type="submit">Register</button>
+            </form>
+            <p id="registerMessage" class="error-message"></p>
         </div>
     </div>
 

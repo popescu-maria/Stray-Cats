@@ -76,3 +76,61 @@ body {
     font-style: italic;
     cursor: not-allowed;
 }
+
+.adopt-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 15px; /* Space from needs checklist */
+    width: 100%; /* Make it full width of the info window */
+    box-sizing: border-box; /* Include padding in width */
+    transition: background-color 0.3s ease;
+}
+
+.adopt-button:hover {
+    background-color: #45a049;
+}
+
+/* Optional: Existing styles for info-window-content, etc. */
+.info-window-content {
+    font-family: Arial, sans-serif;
+    padding: 5px;
+    max-width: 250px; /* Adjust as needed */
+}
+
+.info-window-content h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.info-window-content p {
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.nevoi-checklist {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.nevoi-checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.nevoi-checkbox-item input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+}
+
+.nevoi-checkbox-item label {
+    color: #666;
+}
