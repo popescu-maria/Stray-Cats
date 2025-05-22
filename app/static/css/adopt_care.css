@@ -5,7 +5,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #bde0fe;
     font-family: Arial, sans-serif;
     color: #333;
 }
@@ -27,4 +27,52 @@ body {
     width: 100%;
 }
 
-/* You can add a back button or title styling here if you want */
+.info-window-content h4 {
+    font-size: 1.6em;
+    color: #ff8fab;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+.info-window-content p {
+    margin-bottom: 5px;
+    line-height: 1.9;
+    color: black;
+}
+
+.info-window-content ul {
+    margin-top: 5px;
+    margin-bottom: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.info-window-content ul li {
+    margin-bottom: 3px;
+    color: black;
+}
+
+.gm-ui-hover-effect {
+    top: 10px !important;
+    right: 10px !important;
+}
+
+.nevoi-checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+.nevoi-checkbox-item input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+.nevoi-checkbox-item label {
+    cursor: pointer;
+}
+.nevoi-checkbox-item input[type="checkbox"]:disabled + label {
+    color: #888;
+    font-style: italic;
+    cursor: not-allowed;
+}
