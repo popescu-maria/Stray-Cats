@@ -14,7 +14,6 @@
         {% if current_user.is_authenticated %}
             <button onclick="window.location.href='{{ url_for('main.logout') }}'" class="auth-button">Logout ({{ current_user.username }})</button>
         {% else %}
-            {# Display Login and Create Account buttons if user is NOT logged in #}
             <button id="loginButton" class="auth-button">Login</button>
             <button id="registerButton" class="auth-button">Create Account</button>
         {% endif %}
@@ -28,7 +27,6 @@
         </div>
     </div>
 
-    {# Login Modal #}
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -46,7 +44,6 @@
         </div>
     </div>
 
-    {# Register Modal #}
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>

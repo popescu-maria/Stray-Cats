@@ -1,8 +1,6 @@
 from ..extensions import db
-from sqlalchemy import Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from datetime import datetime, timedelta
-from .users import User
 
 cat_nevoi_association = db.Table('cat_nevoi', db.Model.metadata,
     db.Column('cat_id', db.Integer, db.ForeignKey('cats.id'), primary_key=True),

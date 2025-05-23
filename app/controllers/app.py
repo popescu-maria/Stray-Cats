@@ -1,12 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, flash
 from ..Model.models import Cat, Nevoi, MetNeed
 from ..Model.users import User
-from ..extensions import db, login_manager
-from datetime import datetime, timedelta
+from ..extensions import db
 import os
 import requests
-from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.datastructures import MultiDict
+from flask_login import login_user, logout_user, current_user
 
 main = Blueprint('main', __name__)
 
