@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app, flash, session
-from ..model.models import Cat, Nevoi, MetNeed
-from ..model.users import User
+from ..Model.models import Cat, Nevoi, MetNeed
+from ..Model.users import User
 from ..extensions import db, login_manager
 from datetime import datetime, timedelta
 import os
@@ -99,7 +99,7 @@ def login():
         return redirect(url_for('main.home', next=request.args.get('next')))
 
 @main.route('/logout')
-@login_required
+# @login_required
 def logout():
     logout_user()
     flash('You have been logged out.', 'info')
@@ -117,26 +117,13 @@ def show_add_cat_form():
 
 @main.route('/add-cat-form', methods=['POST'])
 def handle_add_cat_form():
-    if not current_user.is_authenticated:
-        session['pending_cat_form_data'] = request.form.to_dict(flat=False)
-        return jsonify({
-            'success': False,
-            'message': 'Please log in to add a cat.',
-            'login_required': True,
-            'next_url': url_for('main.handle_add_cat_form')
-        }), 401
-
-    form_data_source = request.form
-    if 'pending_cat_form_data' in session:
-        form_data_source = MultiDict(session.pop('pending_cat_form_data'))
-
-    nume = form_data_source.get('nume', '').strip()
-    latitude_str = form_data_source.get('latitude')
-    longitude_str = form_data_source.get('longitude')
-    nevoi_names = form_data_source.getlist('nevoi')
+    nume = request.form.get('nume', '').strip()
+    latitude_str = request.form.get('latitude')
+    longitude_str = request.form.get('longitude')
+    nevoi_names = request.form.getlist('nevoi')
 
     if not nume:
-        return jsonify({'success': False, 'message': 'Numele este obligatoriu.'}), 400
+        return "Numele este obligatoriu.", 400
 
     try:
         latitude = float(latitude_str)
@@ -144,10 +131,10 @@ def handle_add_cat_form():
         if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
             raise ValueError("Coordonate invalide.")
     except (ValueError, TypeError):
-        return jsonify({'success': False, 'message': 'Latitudine sau longitudine invalidă.'}), 400
+        return "Latitudine sau longitudine invalidă.", 400
 
     try:
-        new_cat = Cat(nume=nume, latitude=latitude_str, longitude=longitude_str, user_id=current_user.id)
+        new_cat = Cat(nume=nume, latitude=latitude_str, longitude=longitude_str)
 
         selected_nevoi = []
         if nevoi_names:
@@ -160,39 +147,14 @@ def handle_add_cat_form():
         new_cat.nevoi_list = selected_nevoi
 
         db.session.add(new_cat)
-        current_user.cats_added_count += 1
-        db.session.add(current_user)
         db.session.commit()
 
-        return jsonify({'success': True, 'message': 'Pisică adăugată cu succes!', 'redirect': url_for('main.home')}), 200
+        flash('Pisică adăugată cu succes!', 'info')
+        return redirect(url_for('main.home', status='cat_added_success'))
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"Error adding cat: {str(e)}")
-        return jsonify({'success': False, 'message': f'Eroare la adăugarea pisicii: {str(e)}'}), 500
-
-# @main.route('/adopt-cat', methods=['POST'])
-# @login_required
-# def adopt_cat():
-#     data = request.get_json()
-#     cat_id = data.get('cat_id')
-#
-#     if not cat_id:
-#         return jsonify({'success': False, 'message': 'Cat ID is required.'}), 400
-#
-#     cat_to_delete = Cat.query.get(cat_id)
-#
-#     if not cat_to_delete:
-#         return jsonify({'success': False, 'message': 'Cat not found.'}), 404
-#
-#     try:
-#         MetNeed.query.filter_by(cat_id=cat_id).delete()
-#         db.session.delete(cat_to_delete)
-#         db.session.commit()
-#         return jsonify({'success': True, 'message': f'Pisica "{cat_to_delete.nume}" a fost adoptată și eliminată.'}), 200
-#     except Exception as e:
-#         db.session.rollback()
-#         current_app.logger.error(f"Error adopting cat {cat_id}: {str(e)}")
-#         return jsonify({'success': False, 'message': f'Eroare la adoptarea pisicii: {str(e)}'}), 500
+        return f"Eroare la adăugarea pisicii: {str(e)}", 500
 
 @main.route('/adopt-care', methods=['GET'])
 def show_adopt_care_map():

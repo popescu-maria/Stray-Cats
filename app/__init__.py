@@ -9,7 +9,6 @@ def create_app():
     app = Flask(__name__)
     load_dotenv()
 
-    # Configure your app
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'a_default_secret_key_if_not_set')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

@@ -12,7 +12,6 @@
 
     <div class="top-right-auth-buttons">
         {% if current_user.is_authenticated %}
-            {# Display Logout button if user is logged in #}
             <button onclick="window.location.href='{{ url_for('main.logout') }}'" class="auth-button">Logout ({{ current_user.username }})</button>
         {% else %}
             {# Display Login and Create Account buttons if user is NOT logged in #}

@@ -13,7 +13,6 @@
 
     <script>
         window.catLocations = {{ cat_locations | tojson | safe }};
-        window.isUserAuthenticated = {{ current_user_authenticated | tojson | safe }};
     </script>
 
     <script src="{{ url_for('static', filename='js/adopt_care_map.js') }}"></script>
